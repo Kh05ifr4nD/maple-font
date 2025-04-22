@@ -1,4 +1,4 @@
-name: Build All Formats and Release
+ name: Build All Formats and Release
 
 on:
   push:
@@ -36,12 +36,11 @@ jobs:
     - run: pip install -r requirements.txt
     - name: Build fonts
       run: |
-        python build.py --archive --cn-both --hinted ${{ matrix.config.args }} ${{ github.event.inputs.build_args }}
-        python build.py --archive --cn-both --no-hinted --cache ${{ matrix.config.args }} ${{ github.event.inputs.build_args }}
+        python build.py --cn-both --no-hinted --cache ${{ matrix.config.args }} ${{ github.event.inputs.build_args }}
     - uses: actions/upload-artifact@v4
       with:
         name: release-artifacts-${{ matrix.config.name }}
-        path: fonts/archive/*
+        path: fonts/NF-CN/*
 
   create-release:
     needs: build
