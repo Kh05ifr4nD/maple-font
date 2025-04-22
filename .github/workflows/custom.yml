@@ -36,6 +36,7 @@ jobs:
 
       - name: Run custom script
         run: | 
+          build_args="$build_args --no-hinted --cn"
           if [ -n "${{ github.event.inputs.feat }}" ]; then
             build_args="$build_args --feat ${{ github.event.inputs.feat }}"
           fi
