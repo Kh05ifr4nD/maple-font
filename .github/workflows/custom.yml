@@ -3,26 +3,6 @@ name: Custom Build
 on:
   workflow_dispatch:
     inputs:
-      cn:
-        description: 'Include Chinese version (add "--cn" to build args)'
-        required: false
-        default: false
-        type: boolean
-      normal:
-        description: 'Remove opinionated features (add "--normal" to build args)'
-        required: false
-        default: false
-        type: boolean
-      no_liga:
-        description: 'Remove ligatures (add "--no-liga" to build args)'
-        required: false
-        default: false
-        type: boolean
-      no_hinted:
-        description: 'Build unhinted font (add "--no-hinted" to build args)'
-        required: false
-        default: false
-        type: boolean
       feat:
         description: 'Enable features, split by `,`, e.g. "cv01,ss02" (add "--feat feat1,feat2" to build args)'
         required: false
@@ -40,7 +20,6 @@ permissions:
 jobs:
   custom-build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,20 +35,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run custom script
-        run: |
-          build_args="--archive"
-          if [ "${{ github.event.inputs.cn }}" == "true" ]; then
-            build_args="$build_args --cn"
-          fi
-          if [ "${{ github.event.inputs.normal }}" == "true" ]; then
-            build_args="$build_args --normal"
-          fi
-          if [ "${{ github.event.inputs.no_liga }}" == "true" ]; then
-            build_args="$build_args --no-liga"
-          fi
-          if [ "${{ github.event.inputs.no_hinted }}" == "true" ]; then
-            build_args="$build_args --no-hinted"
-          fi
+        run: | 
           if [ -n "${{ github.event.inputs.feat }}" ]; then
             build_args="$build_args --feat ${{ github.event.inputs.feat }}"
           fi
@@ -96,10 +62,6 @@ jobs:
           path: fonts/issue.fea
       - name: Create release
         run: |
-          if [ ! -d "fonts/archive" ]; then
-            echo "Error: Failed to build font, please check [Run custom script] step."
-            exit 1
-          fi
           echo "### Build arguments" >> NOTES
           echo "\`\`\`" >> NOTES
           echo "python build.py $BUILD_ARGS" >> NOTES
@@ -108,6 +70,6 @@ jobs:
           echo "\`\`\`" >> NOTES
           python build.py $BUILD_ARGS --dry >> NOTES
           echo "\`\`\`" >> NOTES
-          gh release create "v$(date +%s)" fonts/archive/*.* --notes-file NOTES
+          gh release create "v$(date +%s)" fonts/NF-CN/*.* --notes-file NOTES
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

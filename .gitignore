@@ -11,3 +11,6 @@ __pycache__
 .vscode
 uv.lock
 *.backup
+# pixi environments
+.pixi
+*.egg-info
