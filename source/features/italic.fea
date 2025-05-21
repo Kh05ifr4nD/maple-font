@@ -34,9 +34,9 @@
 @X = [X x x.cv36];
 @Y = [Y y y.cv37];
 @Z = [Z z];
-@HexLetter = [@A @B @C @D @E @F];
-@Var = [underscore underscore_underscore.liga @A @B @C @D @E @F @G @H @I @J @K @L @M @N @O @P @Q @R @S @T @U @V @W @X @Y @Z @Digit];
 @AL = [a_l.liga a_l.liga.cv31 a_l.liga.cv35 a_l.liga.cv31.cv35 a_l.liga.cv04 a_l.liga.cv04.cv31 a_l.liga.ss06];
+@Var = [underscore underscore_underscore.liga @A @B @C @D @E @F @G @H @I @J @K @L @M @N @O @P @Q @R @S @T @U @V @W @X @Y @Z @Digit];
+@HexLetter = [@A @B @C @D @E @F];
 
 languagesystem DFLT dflt;
 
@@ -65,6 +65,46 @@ feature aalt {
   feature calt;
 
 } aalt;
+
+feature ccmp {
+
+  @CombiningTopAccents = [acutecomb brevecomb caroncomb circumflexcomb commaturnedabovecomb dblgravecomb dieresiscomb dotaccentcomb gravecomb hookabovecomb hungarumlautcomb macroncomb ringcomb tildecomb];
+  @CombiningNonTopAccents = [cedillacomb dotbelowcomb ogonekcomb ringbelowcomb horncomb slashlongcomb slashshortcomb strokelongcomb];
+  @Markscomb = [dieresiscomb dotaccentcomb gravecomb acutecomb hungarumlautcomb circumflexcomb caroncomb brevecomb ringcomb tildecomb macroncomb hookabovecomb dblgravecomb commaturnedabovecomb horncomb dotbelowcomb commaaccentcomb cedillacomb ogonekcomb dieresis dotaccent acute hungarumlaut circumflex caron breve ring tilde macron tonos brevecomb_acutecomb brevecomb_gravecomb brevecomb_hookabovecomb brevecomb_tildecomb circumflexcomb_acutecomb circumflexcomb_gravecomb circumflexcomb_hookabovecomb circumflexcomb_tildecomb];
+  @MarkscombCase = [dieresiscomb.case dotaccentcomb.case gravecomb.case acutecomb.case hungarumlautcomb.case circumflexcomb.case caroncomb.case brevecomb.case ringcomb.case tildecomb.case macroncomb.case hookabovecomb.case dblgravecomb.case commaturnedabovecomb.case horncomb.case dotbelowcomb.case commaaccentcomb.case cedillacomb.case ogonekcomb.case dieresis.case dotaccent.case acute.case hungarumlaut.case circumflex.case caron.case breve.case ring.case tilde.case macron.case tonos.case brevecomb_acutecomb.case brevecomb_gravecomb.case brevecomb_hookabovecomb.case brevecomb_tildecomb.case circumflexcomb_acutecomb.case circumflexcomb_gravecomb.case circumflexcomb_hookabovecomb.case circumflexcomb_tildecomb.case];
+
+  lookup ccmp_other {
+    sub [i i-cy iogonek idotbelow j je-cy]' @CombiningTopAccents by [idotless idotless iogonekdotless idotbelowdotless jdotless jdotless];
+    sub [i i-cy iogonek idotbelow j je-cy]' @CombiningNonTopAccents @CombiningTopAccents by [idotless idotless iogonekdotless idotbelowdotless jdotless jdotless];
+    sub @Markscomb @Markscomb' by @MarkscombCase;
+    sub @Uppercase @Markscomb' by @MarkscombCase;
+    sub @Markscomb' @MarkscombCase by @MarkscombCase;
+    sub @MarkscombCase @Markscomb' by @MarkscombCase;
+  } ccmp_other;
+
+  lookup ccmp_latn {
+    lookupflag 0;
+    sub brevecomb acutecomb by brevecomb_acutecomb;
+    sub brevecomb.case acutecomb.case by brevecomb_acutecomb.case;
+    sub brevecomb gravecomb by brevecomb_gravecomb;
+    sub brevecomb.case gravecomb.case by brevecomb_gravecomb.case;
+    sub brevecomb hookabovecomb by brevecomb_hookabovecomb;
+    sub brevecomb.case hookabovecomb.case by brevecomb_hookabovecomb.case;
+    sub brevecomb tildecomb by brevecomb_tildecomb;
+    sub brevecomb.case tildecomb.case by brevecomb_tildecomb.case;
+    sub circumflexcomb acutecomb by circumflexcomb_acutecomb;
+    sub circumflexcomb.case acutecomb.case by circumflexcomb_acutecomb.case;
+    sub circumflexcomb gravecomb by circumflexcomb_gravecomb;
+    sub circumflexcomb.case gravecomb.case by circumflexcomb_gravecomb.case;
+    sub circumflexcomb hookabovecomb by circumflexcomb_hookabovecomb;
+    sub circumflexcomb.case hookabovecomb.case by circumflexcomb_hookabovecomb.case;
+    sub circumflexcomb tildecomb by circumflexcomb_tildecomb;
+    sub circumflexcomb.case tildecomb.case by circumflexcomb_tildecomb.case;
+  } ccmp_latn;
+  script latn;
+  lookup ccmp_other;
+
+} ccmp;
 
 feature locl {
 
@@ -335,8 +375,8 @@ feature calt {
   # =:
   lookup equal_colon.liga {
     ignore sub @IgnoreColon equal' colon;
-    ignore sub parenleft @Question equal' colon;
     ignore sub equal' colon [equal colon];
+    ignore sub parenleft @Question equal' colon;
     sub SPC colon' by equal_colon.liga;
     sub equal' colon by SPC;
   } equal_colon.liga;
@@ -344,8 +384,8 @@ feature calt {
   # :=:
   lookup colon_equal_colon.liga {
     ignore sub [@IgnoreColon @Question] colon' equal colon;
-    ignore sub parenleft @Question colon' equal colon;
     ignore sub colon' equal colon [@IgnoreColon @Question];
+    ignore sub parenleft @Question colon' equal colon;
     sub SPC SPC colon' by colon_equal_colon.liga;
     sub SPC equal' colon by SPC;
     sub colon' equal colon by SPC;
@@ -448,8 +488,8 @@ feature calt {
   lookup numbersign_question.liga {
     ignore sub numbersign numbersign' @Question;
     ignore sub numbersign' @Question @Question;
-    sub SPC question' by numbersign_question.liga;
-    sub numbersign' question by SPC;
+    sub SPC @Question' by numbersign_question.liga;
+    sub numbersign' @Question by SPC;
   } numbersign_question.liga;
 
   # #!
@@ -478,7 +518,6 @@ feature calt {
 
   # #_
   lookup numbersign_underscore.liga {
-    ignore sub numbersign numbersign' underscore;
     ignore sub numbersign' underscore [underscore parenleft];
     sub SPC underscore' by numbersign_underscore.liga;
     sub numbersign' underscore by SPC;
@@ -561,6 +600,7 @@ feature calt {
   # >>>
   lookup greater_greater_greater.liga {
     ignore sub greater greater' greater greater;
+    ignore sub greater' greater greater greater;
     sub @QuoteLike SPC SPC greater' @QuoteLike by greater_greater_greater.liga;
     sub @QuoteLike SPC greater' greater @QuoteLike by SPC;
     sub @QuoteLike greater' greater greater @QuoteLike by SPC;
@@ -611,7 +651,7 @@ feature calt {
   # |}
   lookup bar_braceright.liga {
     ignore sub [braceleft bar] bar' braceright;
-    ignore sub bar' bar braceright;
+    ignore sub bar' braceright braceright;
     sub SPC braceright' by bar_braceright.liga;
     sub bar' braceright by SPC;
   } bar_braceright.liga;
@@ -684,7 +724,7 @@ feature calt {
   # ??
   lookup question_question.liga {
     ignore sub @Question @Question' @Question;
-    ignore sub @Question' @Question [@Question equal];
+    ignore sub @Question' @Question @Question;
     sub SPC @Question' by question_question.liga;
     sub @Question' @Question by SPC;
   } question_question.liga;
@@ -701,7 +741,7 @@ feature calt {
   # &&
   lookup ampersand_ampersand.liga {
     ignore sub ampersand ampersand' ampersand;
-    ignore sub ampersand' ampersand [ampersand equal];
+    ignore sub ampersand' ampersand ampersand;
     sub SPC ampersand' by ampersand_ampersand.liga;
     sub ampersand' ampersand by SPC;
   } ampersand_ampersand.liga;
@@ -718,7 +758,7 @@ feature calt {
   # //
   lookup slash_slash.liga {
     ignore sub slash slash' slash;
-    ignore sub slash' slash [slash equal];
+    ignore sub slash' slash slash;
     sub SPC slash' by slash_slash.liga;
     sub slash' slash by SPC;
   } slash_slash.liga;
@@ -777,19 +817,18 @@ feature calt {
   # --
   lookup hyphen_hyphen.liga {
     ignore sub [less hyphen] hyphen' hyphen;
-    ignore sub less [numbersign exclam] hyphen' hyphen;
     ignore sub hyphen' hyphen [hyphen greater];
+    ignore sub less [numbersign exclam] hyphen' hyphen;
     ignore sub parenleft @Question less exclam hyphen' hyphen;
-    ignore sub [less hyphen] hyphen' hyphen;
     sub SPC hyphen' by hyphen_hyphen.liga;
     sub hyphen' hyphen by SPC;
   } hyphen_hyphen.liga;
 
   # ---
   lookup hyphen_hyphen_hyphen.liga {
-    ignore sub less hyphen' hyphen hyphen greater;
     ignore sub hyphen hyphen' hyphen hyphen;
     ignore sub hyphen' hyphen hyphen hyphen;
+    ignore sub less hyphen' hyphen hyphen greater;
     sub SPC SPC hyphen' by hyphen_hyphen_hyphen.liga;
     sub SPC hyphen' hyphen by SPC;
     sub hyphen' hyphen hyphen by SPC;
@@ -967,7 +1006,7 @@ feature calt {
   # >=
   lookup greater_equal.liga {
     ignore sub [greater equal] greater' equal;
-    ignore sub greater' equal [less greater equal @Question @NormalSeparator];
+    ignore sub greater' equal [less greater equal @NormalSeparator];
     sub SPC equal' by greater_equal.liga;
     sub greater' equal by SPC;
   } greater_equal.liga;
@@ -1320,7 +1359,7 @@ feature calt {
   # |>
   lookup bar_greater.liga {
     ignore sub [hyphen less bar] bar' greater;
-    ignore sub bar' greater greater;
+    ignore sub bar' greater [greater equal];
     sub SPC greater' by bar_greater.liga;
     sub bar' greater by SPC;
   } bar_greater.liga;
@@ -1394,7 +1433,7 @@ feature calt {
 
   # </>
   lookup less_slash_greater.liga {
-    ignore sub less less slash' greater;
+    ignore sub less less' slash greater;
     ignore sub less' slash greater greater;
     sub SPC SPC greater' by less_slash_greater.liga;
     sub SPC slash' greater by SPC;
@@ -1419,7 +1458,7 @@ feature calt {
 
   # <+>
   lookup less_plus_greater.liga {
-    ignore sub less less plus' greater;
+    ignore sub less less' plus greater;
     ignore sub less' plus greater greater;
     sub SPC SPC greater' by less_plus_greater.liga;
     sub SPC plus' greater by SPC;
@@ -1444,7 +1483,7 @@ feature calt {
 
   # <*>
   lookup less_asterisk_greater.liga {
-    ignore sub less less asterisk' greater;
+    ignore sub less less' asterisk greater;
     ignore sub less' asterisk greater greater;
     sub SPC SPC greater' by less_asterisk_greater.liga;
     sub SPC asterisk' greater by SPC;
@@ -1652,7 +1691,7 @@ feature calt {
 
   # tl
   lookup t_l.liga {
-    ignore sub l' l l;
+    ignore sub t' l l;
     sub SPC l' by t_l.liga;
     sub t' l by SPC;
   } t_l.liga;
@@ -1673,6 +1712,7 @@ feature calt {
 
   # ff
   lookup f_f.liga {
+    ignore sub f f' f;
     ignore sub f' f f;
     sub SPC f' by f_f.liga;
     sub f' f by SPC;
@@ -1680,7 +1720,8 @@ feature calt {
 
   # tt
   lookup t_t.liga {
-    ignore sub t' t t;
+    ignore sub t t' t;
+    ignore sub t' t [t l];
     sub SPC t' by t_t.liga;
     sub t' t by SPC;
   } t_t.liga;
@@ -1726,46 +1767,6 @@ feature calt {
   } l_l.liga;
 
 } calt;
-
-feature ccmp {
-
-  @CombiningTopAccents = [acutecomb brevecomb caroncomb circumflexcomb commaturnedabovecomb dblgravecomb dieresiscomb dotaccentcomb gravecomb hookabovecomb hungarumlautcomb macroncomb ringcomb tildecomb];
-  @CombiningNonTopAccents = [cedillacomb dotbelowcomb ogonekcomb ringbelowcomb horncomb slashlongcomb slashshortcomb strokelongcomb];
-  @Markscomb = [dieresiscomb dotaccentcomb gravecomb acutecomb hungarumlautcomb circumflexcomb caroncomb brevecomb ringcomb tildecomb macroncomb hookabovecomb dblgravecomb commaturnedabovecomb horncomb dotbelowcomb commaaccentcomb cedillacomb ogonekcomb dieresis dotaccent acute hungarumlaut circumflex caron breve ring tilde macron tonos brevecomb_acutecomb brevecomb_gravecomb brevecomb_hookabovecomb brevecomb_tildecomb circumflexcomb_acutecomb circumflexcomb_gravecomb circumflexcomb_hookabovecomb circumflexcomb_tildecomb];
-  @MarkscombCase = [dieresiscomb.case dotaccentcomb.case gravecomb.case acutecomb.case hungarumlautcomb.case circumflexcomb.case caroncomb.case brevecomb.case ringcomb.case tildecomb.case macroncomb.case hookabovecomb.case dblgravecomb.case commaturnedabovecomb.case horncomb.case dotbelowcomb.case commaaccentcomb.case cedillacomb.case ogonekcomb.case dieresis.case dotaccent.case acute.case hungarumlaut.case circumflex.case caron.case breve.case ring.case tilde.case macron.case tonos.case brevecomb_acutecomb.case brevecomb_gravecomb.case brevecomb_hookabovecomb.case brevecomb_tildecomb.case circumflexcomb_acutecomb.case circumflexcomb_gravecomb.case circumflexcomb_hookabovecomb.case circumflexcomb_tildecomb.case];
-
-  lookup ccmp_other {
-    sub [i i-cy iogonek idotbelow j je-cy]' @CombiningTopAccents by [idotless idotless iogonekdotless idotbelowdotless jdotless jdotless];
-    sub [i i-cy iogonek idotbelow j je-cy]' @CombiningNonTopAccents @CombiningTopAccents by [idotless idotless iogonekdotless idotbelowdotless jdotless jdotless];
-    sub @Markscomb @Markscomb' by @MarkscombCase;
-    sub @Uppercase @Markscomb' by @MarkscombCase;
-    sub @Markscomb' @MarkscombCase by @MarkscombCase;
-    sub @MarkscombCase @Markscomb' by @MarkscombCase;
-  } ccmp_other;
-
-  lookup ccmp_latn {
-    lookupflag 0;
-    sub brevecomb acutecomb by brevecomb_acutecomb;
-    sub brevecomb.case acutecomb.case by brevecomb_acutecomb.case;
-    sub brevecomb gravecomb by brevecomb_gravecomb;
-    sub brevecomb.case gravecomb.case by brevecomb_gravecomb.case;
-    sub brevecomb hookabovecomb by brevecomb_hookabovecomb;
-    sub brevecomb.case hookabovecomb.case by brevecomb_hookabovecomb.case;
-    sub brevecomb tildecomb by brevecomb_tildecomb;
-    sub brevecomb.case tildecomb.case by brevecomb_tildecomb.case;
-    sub circumflexcomb acutecomb by circumflexcomb_acutecomb;
-    sub circumflexcomb.case acutecomb.case by circumflexcomb_acutecomb.case;
-    sub circumflexcomb gravecomb by circumflexcomb_gravecomb;
-    sub circumflexcomb.case gravecomb.case by circumflexcomb_gravecomb.case;
-    sub circumflexcomb hookabovecomb by circumflexcomb_hookabovecomb;
-    sub circumflexcomb.case hookabovecomb.case by circumflexcomb_hookabovecomb.case;
-    sub circumflexcomb tildecomb by circumflexcomb_tildecomb;
-    sub circumflexcomb.case tildecomb.case by circumflexcomb_tildecomb.case;
-  } ccmp_latn;
-  script latn;
-  lookup ccmp_other;
-
-} ccmp;
 
 feature cv01 {
 
@@ -2506,8 +2507,8 @@ feature ss08 {
   # =<<
   lookup equal_less_less.liga.ss08 {
     ignore sub equal equal' less less;
-    ignore sub parenleft @Question equal' less less;
     ignore sub equal' less less less;
+    ignore sub parenleft @Question equal' less less;
     sub SPC SPC less_less.liga' by equal_less_less.liga.ss08;
     sub equal' SPC less_less.liga by SPC;
     sub SPC SPC less' by equal_less_less.liga.ss08;
@@ -2518,8 +2519,8 @@ feature ss08 {
   # =>>
   lookup equal_greater_greater.liga.ss08 {
     ignore sub equal equal' greater greater;
-    ignore sub parenleft @Question equal' greater greater;
     ignore sub equal' greater greater greater;
+    ignore sub parenleft @Question equal' greater greater;
     sub SPC SPC greater_greater.liga' by equal_greater_greater.liga.ss08;
     sub equal' SPC greater_greater.liga by SPC;
     sub SPC SPC greater' by equal_greater_greater.liga.ss08;
@@ -2592,8 +2593,12 @@ feature ss11 {
   };
 
   @IgnoreEqual = [greater equal colon];
-  sub bar_equal.liga by bar_equal.liga.ss11;
-  sub bar_bar_equal.liga by bar_bar_equal.liga.ss11;
+
+  # |= ||=
+  lookup bars_equal {
+    sub bar_equal.liga by bar_equal.liga.ss11;
+    sub bar_bar_equal.liga by bar_bar_equal.liga.ss11;
+  } bars_equal;
 
   # /=
   lookup slash_equal.liga.ss11 {
@@ -2607,6 +2612,7 @@ feature ss11 {
   lookup slash_slash_equal.liga.ss11 {
     ignore sub [slash less] slash' slash equal;
     ignore sub slash' slash equal @IgnoreEqual;
+    sub SPC slash_slash.liga' equal by SPC;
     sub SPC SPC equal' by slash_slash_equal.liga.ss11;
     sub SPC slash' equal by SPC;
     sub slash' slash equal by SPC;
@@ -2628,7 +2634,7 @@ feature ss11 {
     sub ampersand' equal by SPC;
   } ampersand_equal.liga.ss11;
 
-  # ampersand_equal.liga.cv01.ss11
+  # &= in cv01
   lookup ampersand_equal.liga.cv01.ss11 {
     ignore sub ampersand.cv01 ampersand.cv01' equal;
     ignore sub ampersand.cv01' equal @IgnoreEqual;
@@ -2640,15 +2646,17 @@ feature ss11 {
   lookup ampersand_ampersand_equal.liga.ss11 {
     ignore sub ampersand ampersand' ampersand equal;
     ignore sub ampersand' ampersand equal @IgnoreEqual;
+    sub SPC ampersand_ampersand.liga' equal by SPC;
     sub SPC SPC equal' by ampersand_ampersand_equal.liga.ss11;
     sub SPC ampersand' equal by SPC;
     sub ampersand' ampersand equal by SPC;
   } ampersand_ampersand_equal.liga.ss11;
 
-  # ampersand_ampersand_equal.liga.cv01.ss11
+  # &&= in cv01
   lookup ampersand_ampersand_equal.liga.cv01.ss11 {
     ignore sub ampersand.cv01 ampersand.cv01' ampersand.cv01 equal;
     ignore sub ampersand.cv01' ampersand.cv01 equal @IgnoreEqual;
+    sub SPC ampersand_ampersand.liga.cv01' equal by SPC;
     sub SPC SPC equal' by ampersand_ampersand_equal.liga.cv01.ss11;
     sub SPC ampersand.cv01' equal by SPC;
     sub ampersand.cv01' ampersand.cv01 equal by SPC;
@@ -2662,7 +2670,7 @@ feature ss11 {
     sub question' equal by SPC;
   } question_equal.liga.ss11;
 
-  # question_equal.liga.cv62.ss11
+  # ?= in cv62
   lookup question_equal.liga.cv62.ss11 {
     ignore sub question.cv62 question.cv62' equal;
     ignore sub question.cv62' equal @IgnoreEqual;
@@ -2674,15 +2682,17 @@ feature ss11 {
   lookup question_question_equal.liga.ss11 {
     ignore sub question question' question equal;
     ignore sub question' question equal @IgnoreEqual;
+    sub SPC question_question.liga' equal by SPC;
     sub SPC SPC equal' by question_question_equal.liga.ss11;
     sub SPC question' equal by SPC;
     sub question' question equal by SPC;
   } question_question_equal.liga.ss11;
 
-  # question_question_equal.liga.cv62.ss11
+  # ??= in cv62
   lookup question_question_equal.liga.cv62.ss11 {
     ignore sub question.cv62 question.cv62' question.cv62 equal;
     ignore sub question.cv62' question.cv62 equal @IgnoreEqual;
+    sub SPC question_question.liga.cv62' equal by SPC;
     sub SPC SPC equal' by question_question_equal.liga.cv62.ss11;
     sub SPC question.cv62' equal by SPC;
     sub question.cv62' question.cv62 equal by SPC;

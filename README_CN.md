@@ -2,6 +2,7 @@
 
 <p align="center">
   <a href="https://trendshift.io/repositories/13165" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13165" alt="subframe7536%2Fmaple-font | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+  <a href="https://hellogithub.com/repository/0601f355bd824d88b58f1af3066c486a" target="_blank"><img src="https://api.hellogithub.com/v1/widgets/recommend.svg?rid=0601f355bd824d88b58f1af3066c486a&claim_uid=AO0yWRQ48ITGNqK" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 </p>
 <p align="center">
   <img alt="GitHub Repo Stars" src="https://img.shields.io/github/stars/subframe7536/maple-font">
@@ -129,7 +130,7 @@ brew install --cask font-maple-mono-nf-cn
 
 ### Arch Linux
 
-ArchLinuxCN仓库允许下载单个软件包的zip文件，而无需下载pkgbase中的所有软件包的zip文件，但AUR不允许。(如果您有好的解决方案，请联系Cyberczy(czysheep@gmail.com))
+ArchLinuxCN 仓库允许下载单个软件包的 zip 文件，而无需下载 pkgbase 中的所有软件包的 zip 文件，但 AUR 不允许。(如果您有好的解决方案，请联系 Cyberczy(czysheep@gmail.com))
 
 #### ArchLinuxCN (推荐)
 
@@ -566,6 +567,17 @@ python build.py
 
 运行 `build.py` 时添加 `--normal` 参数，让字形不那么独特~~奇怪~~，就像 `JetBrains Mono` 一样（除了 `0` 的中间是斜线而不是点）。
 
+如果您使用的是可变字体（不推荐），请启用 `calt` 特性以使所有特性正常工作。
+
+启用的特性：
+<!-- NORMAL -->
+```
+cv01, cv02, cv33, cv34, cv35, cv36, cv61, cv62, ss05, ss06, ss07, ss08
+```
+<!-- NORMAL -->
+
+[在线预览](https://font.subf.dev/zh-cn/playground?normal)
+
 #### 字体特性强制开启
 
 有三种选项（[为什么](https://github.com/subframe7536/maple-font/issues/233#issuecomment-2410170270)）：
@@ -590,7 +602,9 @@ OpenType Feature 可以控制字体的内置变体和连字。您可以通过修
 
 #### 缩小中文字体的间距
 
-如果您觉得中文字符的间距**过大**，有一个**实验性**的构建选项 `cn.narrow` 或 参数 `--cn-narrow` 可以缩小间距。您可以在 [#249](https://github.com/subframe7536/maple-font/issues/249) 中查看效果并跟踪问题。
+如果您觉得中文字符的间距**过大**，有一个构建选项 `cn.narrow` 或 命令行参数 `--cn-narrow` 可以缩小间距，但是这将让字体无法被识别为等宽字体。
+
+您可以在 [#249](https://github.com/subframe7536/maple-font/issues/249#issuecomment-2871260476) 中查看效果。
 
 #### GitHub 镜像
 
@@ -605,43 +619,46 @@ OpenType Feature 可以控制字体的内置变体和连字。您可以通过修
 ```
 usage: build.py [-h] [-v] [-d] [--debug] [-n] [--feat FEAT] [--apply-fea-file]
                 [--hinted | --no-hinted] [--liga | --no-liga] [--cn-narrow]
-                [--nerd-font | --no-nerd-font] [--cn | --no-cn] [--cn-both]
-                [--ttf-only] [--least-styles] [--cache] [--cn-rebuild]
-                [--archive]
+                [--cn-scale-factor CN_SCALE_FACTOR] [--nerd-font | --no-nerd-font]
+                [--cn | --no-cn] [--cn-both] [--ttf-only] [--least-styles]
+                [--font-patcher] [--cache] [--cn-rebuild] [--archive]
 
 ✨ Builder and optimizer for Maple Mono
 
 options:
-  -h, --help        显示此帮助信息并退出
-  -v, --version     显示程序的版本号并退出
-  -d, --dry         输出配置并退出
-  --debug           在字体名称中添加 `Debug` 后缀并加快构建
+  -h, --help            显示此帮助信息并退出
+  -v, --version         显示程序版本号并退出
+  -d, --dry             输出配置并退出
+  --debug               在字体名称中添加 `Debug` 后缀并加快构建速度
 
 Feature Options:
-  -n, --normal      使用 normal 预设，就像带有斜杠 0 的 `JetBrains Mono`
-  --feat FEAT       强制启用字体特性，用 `,` 分隔 (例如 `--feat
-                    zero,cv01,ss07,ss08`)。对可变字体无效
-  --apply-fea-file  从 `source/features/{regular,italic}.fea` 加载特性文件到
-                    可变字体
-  --hinted          在 NF / CN / NF-CN 中使用 hinted 字体作为基础字体 (默认)
-  --no-hinted       在 NF / CN / NF-CN 中使用 unhinted 字体作为基础字体
-  --liga            保留所有连字 (默认)
-  --no-liga         删除所有连字
-  --cn-narrow       减小中文字形间距 (实验性的)
+  -n, --normal          使用 normal 预设，就像带斜杠零的 `JetBrains Mono`
+  --feat FEAT           强制启用字体特性，用 `,` 分隔（例如 `--feat
+                        zero,cv01,ss07,ss08`）。 对可变字体无效
+  --apply-fea-file      从 `source/features/{regular,italic}.fea` 加载特性文件到
+                        可变字体
+  --hinted              在 NF / CN / NF-CN 中使用 hinted 字体作为基础字体（默认）
+  --no-hinted           在 NF / CN / NF-CN 中使用 unhinted 字体作为基础字体
+  --liga                保留所有连字（默认）
+  --no-liga             删除所有连字
+  --cn-narrow           减小中文/日文字形间距（同时会让系统无法识别为等宽字体）
+  --cn-scale-factor CN_SCALE_FACTOR
+                        中文/日文字形的缩放因子（例如 1.1）
 
 Build Options:
-  --nerd-font       构建 Nerd-Font 版本 (默认)
-  --no-nerd-font    不构建 Nerd-Font 版本
-  --cn              构建中文版本
-  --no-cn           不构建中文版本 (默认)
-  --cn-both         同时构建 `Maple Mono CN` 和 `Maple Mono NF CN`。必须启用
-                    Nerd-Font 版本
-  --ttf-only        仅构建 TTF 格式
-  --least-styles    仅构建常规 / 粗体 / 斜体 / 粗体斜体样式
-  --cache           重用 TTF、OTF 和 Woff2 格式的字体缓存
-  --cn-rebuild      重新静态化中文基字
-  --archive         构建带有配置和许可的字体压缩包。如果带有 `--cache`
-                    标志，则仅打包 Nerd-Font 和 CN 格式
+  --nerd-font           构建 Nerd-Font 版本（默认）
+  --no-nerd-font        不构建 Nerd-Font 版本
+  --cn                  构建中文版本
+  --no-cn               不构建中文版本（默认）
+  --cn-both             同时构建 `Maple Mono CN` 和 `Maple Mono NF CN`。必须启用
+                        Nerd-Font 版本
+  --ttf-only            仅构建 TTF 格式
+  --least-styles        仅构建 常规 / 粗体 / 斜体 / 粗斜体 样式
+  --font-patcher        强制使用 Nerd Font Patcher 构建 NF 格式
+  --cache               重用 TTF、OTF 和 Woff2 格式的字体缓存
+  --cn-rebuild          重新静态化可变的中文基字
+  --archive             构建带有配置和许可的字体压缩包。如果带有 `--cache`
+                        标志，则仅打包 NF 和 CN 格式
 ```
 
 ## 我个人在用的其他中文字体资源

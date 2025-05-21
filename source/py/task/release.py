@@ -3,8 +3,9 @@ import re
 import shutil
 from typing import Callable
 from fontTools.ttLib import TTFont
-from source.py.task._utils import write_json
+from source.py.task._utils import write_json, write_text
 from source.py.utils import joinPaths, run
+from build import main
 
 # Mapping of style names to weights
 weight_map = {
@@ -73,11 +74,10 @@ def parse_tag(tag: str, beta: str):
     return tag
 
 
-def update_build_script_version(tag):
-    with open("build.py", "w+", encoding="utf-8", newline="\n") as f:
+def update_build_script_version(script_path: str, tag: str):
+    with open(script_path, "r", encoding="utf-8", newline="\n") as f:
         content = re.sub(r'FONT_VERSION = ".*"', f'FONT_VERSION = "{tag}"', f.read())
-        f.write(content)
-        f.close()
+    write_text(script_path, content)
 
 
 def git_release_commit(tag, files):
@@ -117,11 +117,13 @@ def release(tag: str, beta: str, dry: bool):
     if choose != "" and choose.lower() != "y":
         print("Aborted")
         return
-    update_build_script_version(tag)
+
+    script_path = "build.py"
+    update_build_script_version(script_path, tag)
+    target_fontsource_dir = "cdn/fontsource"
+    main(["--ttf-only", "--no-nerd-font", "--cn", "--no-hinted"], tag)
 
     shutil.rmtree("./cdn", ignore_errors=True)
-    target_fontsource_dir = "cdn/fontsource"
-    run("python build.py --ttf-only --no-nerd-font --cn --no-hinted")
     run(f"ftcli converter ft2wf -f woff2 ./fonts/TTF -out {target_fontsource_dir}")
     run(f"ftcli converter ft2wf -f woff ./fonts/TTF -out {target_fontsource_dir}")
     rename_woff_files(target_fontsource_dir, format_fontsource_name)
@@ -141,13 +143,6 @@ def release(tag: str, beta: str, dry: bool):
     run(f"ftcli converter ft2wf -f woff2 ./fonts/Variable -out {woff2_dir}")
     rename_woff_files(woff2_dir, format_woff2_name)
 
-    submodule_path = "./maple-font-page"
-    public_path = f"{submodule_path}/public/fonts"
-    shutil.rmtree(public_path, ignore_errors=True)
-    shutil.copytree(woff2_dir, public_path)
-
-    print("Update variable WOFF2")
-
     # write_unicode_map_json(
     #     "./fonts/TTF/MapleMono-Regular.ttf", "./resources/glyph-map.json"
     # )
@@ -155,4 +150,4 @@ def release(tag: str, beta: str, dry: bool):
     if dry:
         print("Dry run")
     else:
-        git_release_commit(tag, ["build.py", "woff2", dep_file])
+        git_release_commit(tag, [script_path, "woff2", dep_file])

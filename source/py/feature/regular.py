@@ -1,6 +1,5 @@
 import source.py.feature.ast as ast
-from source.py.feature.base import get_base_features
-from source.py.feature.calt import get_calt
+from source.py.feature.base.clazz import get_base_class_list, cls_digit
 from source.py.feature.cv import (
     cv01,
     cv02,
@@ -13,10 +12,6 @@ from source.py.feature.cv import (
     cv61,
     cv62,
     cv63,
-    cv96,
-    cv97,
-    cv98,
-    cv99,
 )
 from source.py.feature.ss import (
     ss01,
@@ -30,9 +25,6 @@ from source.py.feature.ss import (
     ss10,
     ss11,
 )
-from source.py.feature.base.clazz import base_class_list, cls_digit
-from source.py.feature.base.lang import lang_list
-
 
 cls_a = ast.Clazz("A", ["A", "a", "a.cv02"])
 cls_b = ast.Clazz("B", ["B", "b"])
@@ -60,7 +52,6 @@ cls_w = ast.Clazz("W", ["W", "w"])
 cls_x = ast.Clazz("X", ["X", "x"])
 cls_y = ast.Clazz("Y", ["Y", "y"])
 cls_z = ast.Clazz("Z", ["Z", "z"])
-cls_hex_letter = ast.Clazz("HexLetter", [cls_a, cls_b, cls_c, cls_d, cls_e, cls_f])
 
 cls_letters_list = [
     cls_a,
@@ -92,10 +83,14 @@ cls_letters_list = [
 ]
 
 cls_var = ast.Clazz("Var", ["_", "__", *cls_letters_list, cls_digit])
+cls_hex_letter = ast.Clazz("HexLetter", [cls_a, cls_b, cls_c, cls_d, cls_e, cls_f])
 
-class_list_regular = [*base_class_list, *cls_letters_list, cls_hex_letter, cls_var]
-
-calt_regular = get_calt(cls_var, cls_hex_letter, is_italic=False)
+class_list_regular = [
+    *get_base_class_list(),
+    *cls_letters_list,
+    cls_var,
+    cls_hex_letter,
+]
 
 cv_list_regular = [
     cv01.cv01_feat_regular,
@@ -112,14 +107,6 @@ cv_list_regular = [
 ]
 
 
-cv_list_cn = [
-    cv96.cv96_feat_cn,
-    cv97.cv97_feat_cn,
-    cv98.cv98_feat_cn,
-    cv99.cv99_feat_cn,
-]
-
-
 ss_list_regular = [
     ss01.ss01_feat,
     ss02.ss02_feat,
@@ -132,25 +119,3 @@ ss_list_regular = [
     ss10.ss10_feat,
     ss11.ss11_feat,
 ]
-
-
-feature_file_regular = ast.create(
-    [
-        class_list_regular,
-        lang_list,
-        get_base_features(calt_regular, False),
-        cv_list_regular,
-        ss_list_regular,
-    ],
-)
-
-feature_file_regular_cn = ast.create(
-    [
-        class_list_regular,
-        lang_list,
-        get_base_features(calt_regular, True),
-        cv_list_regular,
-        cv_list_cn,
-        ss_list_regular,
-    ],
-)
